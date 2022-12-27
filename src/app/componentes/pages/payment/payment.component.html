@@ -1,0 +1,428 @@
+<body>
+<div class="container">
+  <div class="form-wrapper">
+    <div id="card" class="card">
+      <div class="card__front card__part">
+        <div class="text-right">
+          <img
+            width="60"
+            src="https://www.seekpng.com/png/full/212-2128294_visa-logo-png-image-visa-logo-white-png.png"
+            alt="Visa"
+          <body>
+          <div class="container">
+            <div class="form-wrapper">
+              <div id="card" class="card">
+                <div class="card__front card__part">
+                  <div class="text-right">
+                    <img
+                      width="60"
+                      src="https://www.seekpng.com/png/full/212-2128294_visa-logo-png-image-visa-logo-white-png.png"
+                      alt="Visa"
+                    />
+                  </div>
+                  <p id="card__number__preview" class="card__number color-white">
+                    ---- ---- ---- ----
+                  </p>
+                  <div class="d-flex">
+                    <div class="card__holder">
+                      <span class="card__label color-white">Nome</span>
+                      <p id="card__holder__preview" class="card__info color-white"></p>
+                    </div>
+                    <div class="card__expiration">
+                      <span class="card__label color-white">Validade</span>
+                      <p id="card__expiration__preview" class="card__info color-white"></p>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="card__back card__part">
+                  <div class="card__black-line"></div>
+                  <div class="card__back-content">
+                    <div class="card__secret">
+                      <p id="card__secret__preview" class="card__secret--last">****</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <form id="form" class="form">
+                <div class="form-group">
+                  <label for="card__number__input">Número do cartão</label>
+                  <input
+                    type="text"
+                    id="card__number__input"
+                    maxlength="19"
+                    autocomplete="off"
+                    placeholder="0000 0000 0000 0000"
+                    inputmode="numeric"
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="card__holder__input">Nome como aparece no cartão</label>
+                  <input
+                    type="text"
+                    id="card__holder__input"
+                    autocomplete="off"
+                    placeholder="Nome"
+                    maxlength="20"
+                  />
+                </div>
+                <div class="d-flex form-group-row">
+                  <div class="form-group w-100">
+                    <label for="card__expiration__input">Validade</label>
+                    <input
+                      type="text"
+                      id="card__expiration__input"
+                      placeholder="MM/YY"
+                      maxlength="5"
+                      autocomplete="off"
+                      inputmode="numeric"
+                    />
+                  </div>
+                  <div class="form-group">
+                    <label for="card__secret__input">CVV</label>
+                    <input
+                      id="card__secret__input"
+                      type="text"
+                      placeholder="0000"
+                      maxlength="4"
+                      autocomplete="off"
+                      inputmode="numeric"
+                    />
+                  </div>
+                </div>
+                <div class="d-flex">
+                  <button type="button">Enviar</button>
+                </div>
+              </form>
+            </div>
+          </div>
+
+          <script src="https://unpkg.com/imask"></script>
+          <script>
+            /* Função privada auto invocável para não poluir escopo global */
+            (() => {
+              'use strict';
+              /* Inputs */
+              const $cardNumberInput = document.getElementById('card__number__input')
+              const $cardHolderInput = document.getElementById('card__holder__input')
+              const $cardSecretInput = document.getElementById('card__secret__input')
+              const $cardExpirationInput = document.getElementById('card__expiration__input')
+
+              /* Elementos de exibição do cartão */
+              const $cardNumberPreview = document.getElementById('card__number__preview')
+              const $cardHolderPreview = document.getElementById('card__holder__preview')
+              const $cardSecretPreview = document.getElementById('card__secret__preview')
+              const $cardExpirationPreview = document.getElementById('card__expiration__preview')
+              const $cardNumberInput = document.getElementById('card_number_input');
+              $cardNumberPreview.addEventListener("input", ( ) => {
+                const numberValue = document.querySelector('.card_numberpreview')
+                numberValue.innerText = $cardNumberInput.value.length === 0 ? '---- ---- ---- ----' : $cardNumberInput.value
+              }
+              /* Wrapper do cartão */
+              const $card = document.getElementById("card")
+
+              /* Função para virar o cartão */
+              const toggleCardFlip = () => $card.classList.toggle("card-flip");
+
+              /* Event handlers para foco do input de cvv
+                vira o cartão ao focar e vira novamente ao sair)
+              */
+              $cardSecretInput.addEventListener("focus", toggleCardFlip);
+              $cardSecretInput.addEventListener("blur", toggleCardFlip);
+
+              /*
+                Máscaras dos campos
+                Doc da lib utilizada: https://imask.js.org/
+              */
+              const cardNumberInputMask = IMask($cardNumberInput, {
+                mask: '0000 0000 0000 0000'
+              });
+
+              IMask($cardHolderInput, {
+                mask: String,
+                maxLength: 25
+              });
+
+              IMask($cardExpirationInput, {
+                mask: '00/00'
+              });
+
+              IMask($cardSecretInput, {
+                mask: '0000'
+              });
+
+              /*
+                Função para atualizar preview no cartão
+                Essa função evita duplicidade de código e simplifica
+              */
+              function updateCardPreviewHandler ($input, $preview) {
+                $input.addEventListener("input", ({ target }) => {
+                  $preview.innerText = target.value
+                })
+              }
+
+              updateCardPreviewHandler($cardHolderInput, $cardHolderPreview)
+              updateCardPreviewHandler($cardSecretInput, $cardSecretPreview)
+              updateCardPreviewHandler($cardExpirationInput, $cardExpirationPreview)
+
+              /*
+                Função de renderização diferente para número do cartão
+                Adiciona as hashtags nos espaços ainda não preenchidos pelo usuário
+              */
+              $cardNumberInput.addEventListener("input", (event) => {
+                // Valor preenchido pelo usuário
+                const userInputValue = event.target.value
+
+                // Cria um array com os espaços para os digitos
+                // Um número de cartão tem o tamanho de 19 considerando espaços
+                const places = Array.from({ length: 19 })
+
+                /*
+                  Por padrão a variavel acima vem com itens undefined
+                  Você pode colocar um console logo acima para ver como fica
+                  Vamos preencher esse array com espaços a cada 4 digitos
+                  i é o indice do elemento ao qual estamos percorrendo
+                  i % 5 é usado para calcular o resto da divisão de i por 5
+                  sempre que ele for igual a quatro significa que temos que inserir um espaço
+                  caso contrário colocamos a hashtag
+                */
+                const placesWithSpace = places.map((_, i) => i % 5 === 4 ? ' ' : '#')
+
+                /*
+                  Agora vamos substituir as hashtags pelos números que o usuário preencheu
+                  poderiamos ter usado o map acima para isso por questões de performance
+                  mas para que o código não fique complexo de entender eu resolvi separar
+                */
+                const placesWithNumbers = placesWithSpace.map((el, index) => {
+                  // Vamos fazer um split do input do usuário para transformar em array
+                  const userInputSplit = userInputValue.split('')
+
+                  /*
+                    Agora vamos retornar para o map o input do usuário
+                    caso o espaço não esteja preenchido, retorna o valor atual (hashtag ou espaço)
+                  */
+                  return userInputSplit[index] || el
+                })
+
+                /*
+                  Aqui placesWithNumbers ainda é um array, você pode usar um console log para
+                  ver como se comporta. Vamos fazer um join para juntar tudo e transformar em string
+                */
+                const placesFilled = placesWithNumbers.join('')
+
+                // Agora é só atualizar o preview
+                $cardNumberPreview.innerText = placesFilled
+
+                /*
+                  Ficou com alguma dúvida? Me chama no instagram. Vamos conversar :)
+                  https://www.instagram.com/wygor.code/
+                */
+              })
+            })();
+          </script>
+          </body>
+          />
+        </div>
+        <p id="card__number__preview" class="card__number color-white">
+          ---- ---- ---- ----
+        </p>
+        <div class="d-flex">
+          <div class="card__holder">
+            <span class="card__label color-white">Nome</span>
+            <p id="card__holder__preview" class="card__info color-white"></p>
+          </div>
+          <div class="card__expiration">
+            <span class="card__label color-white">Validade</span>
+            <p id="card__expiration__preview" class="card__info color-white"></p>
+          </div>
+        </div>
+      </div>
+
+      <div class="card__back card__part">
+        <div class="card__black-line"></div>
+        <div class="card__back-content">
+          <div class="card__secret">
+            <p id="card__secret__preview" class="card__secret--last">****</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <form id="form" class="form">
+      <div class="form-group">
+        <label for="card__number__input">Número do cartão</label>
+        <input
+          type="text"
+          id="card__number__input"
+          maxlength="19"
+          autocomplete="off"
+          placeholder="0000 0000 0000 0000"
+          inputmode="numeric"
+        />
+      </div>
+      <div class="form-group">
+        <label for="card__holder__input">Nome como aparece no cartão</label>
+        <input
+          type="text"
+          id="card__holder__input"
+          autocomplete="off"
+          placeholder="Nome"
+          maxlength="20"
+        />
+      </div>
+      <div class="d-flex form-group-row">
+        <div class="form-group w-100">
+          <label for="card__expiration__input">Validade</label>
+          <input
+            type="text"
+            id="card__expiration__input"
+            placeholder="MM/YY"
+            maxlength="5"
+            autocomplete="off"
+            inputmode="numeric"
+          />
+        </div>
+        <div class="form-group">
+          <label for="card__secret__input">CVV</label>
+          <input
+            id="card__secret__input"
+            type="text"
+            placeholder="0000"
+            maxlength="4"
+            autocomplete="off"
+            inputmode="numeric"
+          />
+        </div>
+      </div>
+      <div class="d-flex">
+        <button type="button">Enviar</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://unpkg.com/imask"></script>
+<script>
+  /* Função privada auto invocável para não poluir escopo global */
+  (() => {
+    'use strict';
+    /* Inputs */
+    const $cardNumberInput = document.getElementById('card__number__input')
+    const $cardHolderInput = document.getElementById('card__holder__input')
+    const $cardSecretInput = document.getElementById('card__secret__input')
+    const $cardExpirationInput = document.getElementById('card__expiration__input')
+
+    /* Elementos de exibição do cartão */
+    const $cardNumberPreview = document.getElementById('card__number__preview')
+    const $cardHolderPreview = document.getElementById('card__holder__preview')
+    const $cardSecretPreview = document.getElementById('card__secret__preview')
+    const $cardExpirationPreview = document.getElementById('card__expiration__preview')
+    const $cardNumberInput = document.getElementById('card_number_input');
+    $cardNumberPreview.addEventListener("input", ( ) => {
+      const numberValue = document.querySelector('.card_numberpreview')
+      numberValue.innerText = $cardNumberInput.value.length === 0 ? '---- ---- ---- ----' : $cardNumberInput.value
+    }
+    /* Wrapper do cartão */
+    const $card = document.getElementById("card")
+
+    /* Função para virar o cartão */
+    const toggleCardFlip = () => $card.classList.toggle("card-flip");
+
+    /* Event handlers para foco do input de cvv
+      vira o cartão ao focar e vira novamente ao sair)
+    */
+    $cardSecretInput.addEventListener("focus", toggleCardFlip);
+    $cardSecretInput.addEventListener("blur", toggleCardFlip);
+
+    /*
+      Máscaras dos campos
+      Doc da lib utilizada: https://imask.js.org/
+    */
+    const cardNumberInputMask = IMask($cardNumberInput, {
+      mask: '0000 0000 0000 0000'
+    });
+
+    IMask($cardHolderInput, {
+      mask: String,
+      maxLength: 25
+    });
+
+    IMask($cardExpirationInput, {
+      mask: '00/00'
+    });
+
+    IMask($cardSecretInput, {
+      mask: '0000'
+    });
+
+    /*
+      Função para atualizar preview no cartão
+      Essa função evita duplicidade de código e simplifica
+    */
+    function updateCardPreviewHandler ($input, $preview) {
+      $input.addEventListener("input", ({ target }) => {
+        $preview.innerText = target.value
+      })
+    }
+
+    updateCardPreviewHandler($cardHolderInput, $cardHolderPreview)
+    updateCardPreviewHandler($cardSecretInput, $cardSecretPreview)
+    updateCardPreviewHandler($cardExpirationInput, $cardExpirationPreview)
+
+    /*
+      Função de renderização diferente para número do cartão
+      Adiciona as hashtags nos espaços ainda não preenchidos pelo usuário
+    */
+    $cardNumberInput.addEventListener("input", (event) => {
+      // Valor preenchido pelo usuário
+      const userInputValue = event.target.value
+
+      // Cria um array com os espaços para os digitos
+      // Um número de cartão tem o tamanho de 19 considerando espaços
+      const places = Array.from({ length: 19 })
+
+      /*
+        Por padrão a variavel acima vem com itens undefined
+        Você pode colocar um console logo acima para ver como fica
+        Vamos preencher esse array com espaços a cada 4 digitos
+        i é o indice do elemento ao qual estamos percorrendo
+        i % 5 é usado para calcular o resto da divisão de i por 5
+        sempre que ele for igual a quatro significa que temos que inserir um espaço
+        caso contrário colocamos a hashtag
+      */
+      const placesWithSpace = places.map((_, i) => i % 5 === 4 ? ' ' : '#')
+
+      /*
+        Agora vamos substituir as hashtags pelos números que o usuário preencheu
+        poderiamos ter usado o map acima para isso por questões de performance
+        mas para que o código não fique complexo de entender eu resolvi separar
+      */
+      const placesWithNumbers = placesWithSpace.map((el, index) => {
+        // Vamos fazer um split do input do usuário para transformar em array
+        const userInputSplit = userInputValue.split('')
+
+        /*
+          Agora vamos retornar para o map o input do usuário
+          caso o espaço não esteja preenchido, retorna o valor atual (hashtag ou espaço)
+        */
+        return userInputSplit[index] || el
+      })
+
+      /*
+        Aqui placesWithNumbers ainda é um array, você pode usar um console log para
+        ver como se comporta. Vamos fazer um join para juntar tudo e transformar em string
+      */
+      const placesFilled = placesWithNumbers.join('')
+
+      // Agora é só atualizar o preview
+      $cardNumberPreview.innerText = placesFilled
+
+      /*
+        Ficou com alguma dúvida? Me chama no instagram. Vamos conversar :)
+        https://www.instagram.com/wygor.code/
+      */
+    })
+  })();
+</script>
+</body>

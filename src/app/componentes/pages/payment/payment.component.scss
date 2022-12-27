@@ -1,0 +1,232 @@
+@import url("https://fonts.googleapis.com/css?family=Space+Mono:400,400i,700,700i");
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@100;300;400;500;700&display=swap");
+
+/** Reset CSS */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+.d-flex {
+  display: flex;
+}
+
+.text-right {
+  text-align: right;
+}
+
+.flex-column {
+  flex-direction: column;
+}
+
+.w-100 {
+  width: 100%;
+}
+
+.color-white {
+  color: white
+}
+
+.container {
+  width: 100vw;
+  height: 100vh;
+  display: grid;
+  place-items: center;
+  //background: black;
+}
+
+.card {
+  font-family: "Space Mono", monospace;
+  transform: translateY(-80px);
+  -webkit-transform: translateY(-80px);
+  -moz-transform: translateY(-80px);
+  -webkit-perspective: 600px;
+  -moz-perspective: 600px;
+  margin-bottom: -40px;
+  perspective: 600px;
+  cursor: pointer;
+}
+
+.card__part {
+  position: absolute;
+  z-index: 1000;
+  top: 0;
+  background-image: url("https://images8.alphacoders.com/893/893848.png");
+  box-shadow: rgba(255, 255, 255, 0.1) 0px 1px 1px 0px inset,
+  rgba(50, 50, 93, 0.25) 0px 20px 50px -20px,
+  rgba(0, 0, 0, 0.3) 0px 30px 60px -30px;
+  background-repeat: no-repeat;
+  background-position: center;
+  background-color: #000;
+  background-size: cover;
+  border-radius: 8px;
+  -webkit-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -moz-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -ms-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -o-transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  transition: all 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+  -webkit-transform-style: preserve-3d;
+  -moz-transform-style: preserve-3d;
+  -webkit-backface-visibility: hidden;
+  -moz-backface-visibility: hidden;
+}
+
+.card,
+.card__part {
+  width: 340px;
+  height: 210px;
+}
+
+.card__back {
+  padding: 18px 0;
+  -webkit-transform: rotateY(-180deg); /* Compatibilidade */
+  -moz-transform: rotateY(-180deg); /* Compatibilidade */
+}
+
+.card__black-line {
+  margin-top: 5px;
+  height: 38px;
+  background-color: #303030;
+}
+
+.card__number {
+  word-spacing: 2px;
+  letter-spacing: 3px;
+  font-size: 20px;
+}
+
+.card__expiration {
+  margin-left: auto;
+  width: 70px;
+}
+
+.card__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.card__info {
+  margin-bottom: 0;
+  margin-top: 5px;
+  font-size: 16px;
+  line-height: 18px;
+  height: 18px;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+}
+
+.card__secret--last {
+  color: #303030;
+  text-align: right;
+  font-size: 14px;
+  margin: 0;
+  height: 22px;
+}
+
+.card__secret {
+  padding: 5px 12px;
+  background-color: #fff;
+  position: relative;
+}
+
+.card__secret:before {
+  content: "";
+  position: absolute;
+  top: -3px;
+  left: -3px;
+  height: calc(100% + 6px);
+  width: calc(100% - 52px);
+  border-radius: 4px;
+  background: repeating-linear-gradient(
+      45deg,
+      #ededed,
+      #ededed 5px,
+      #f9f9f9 5px,
+      #f9f9f9 10px
+  );
+}
+
+.card:hover .card__front,
+.card.card-flip .card__front {
+  -webkit-transform: rotateY(180deg);
+  -moz-transform: rotateY(180deg);
+}
+
+.card:hover .card__back,
+.card.card-flip .card__back {
+  -webkit-transform: rotateY(0deg);
+  -moz-transform: rotateY(0deg);
+}
+
+.card__front {
+  display: flex;
+  flex-direction: column;
+  padding: 24px 20px;
+  justify-content: space-between;
+}
+
+.form-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  background: #fff;
+  width: 500px;
+  margin-top: 80px;
+  padding: 0 30px 40px 30px;
+  border-radius: 4px;
+  box-shadow: rgba(17, 12, 46, 0.15) 0px 48px 100px 0px;
+}
+
+input {
+  width: 100%;
+  height: 40px;
+  border: thin solid #c8c8c8;
+  border-radius: 4px;
+  padding: 10px;
+  font-family: "Roboto", sans-serif;
+}
+
+button {
+  font-family: "Roboto", sans-serif;
+  width: 100%;
+  height: 40px;
+  border: none;
+  color: white;
+  font-weight: 400;
+  font-size: 14px;
+  background: #0a0616;
+  border-radius: 4px;
+  margin-top: 10px;
+  cursor: pointer;
+  transition: all 0.5s ease;
+  -moz-transition: all 0.5s ease;
+  -webkit-transition: all 0.5s ease;
+}
+
+button:hover {
+  opacity: 0.8;
+}
+
+.form {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  font-family: "Roboto", sans-serif;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.form-group-row {
+  gap: 16px;
+}
+
+.card__back-content {
+  padding: 16px 20px;
+}
